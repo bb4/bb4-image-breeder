@@ -1,0 +1,36 @@
+description = '<image breeder application>'
+group = 'com.barrybecker4'
+version = '1.1-SNAPSHOT'
+
+apply from: 'https://raw.github.com/barrybecker4/bb4-common/master/bb4.gradle'
+
+project.archivesBaseName = 'bb4-image-breeder'
+mainClassName = 'com.barrybecker4.imagebreeder.ImageBreederApplet'
+
+
+task runImageBreeder(type: JavaExec, dependsOn: classes) {
+    group = 'application'
+    main = 'com.barrybecker4.imagebreeder.ImageBreederApplet'
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ["-ea", "-Xms512M", "-Xmx4G"]
+}
+
+
+dependencies {
+    compile 'com.barrybecker4:bb4-ui:1.5-SNAPSHOT'
+    compile 'com.barrybecker4:bb4-imageproc:1.3-SNAPSHOT'
+    compile fileTree(dir: 'lib', include: 'jhlabs-1.0.3.jar')
+}
+
+jar {
+    archiveName = "${archivesBaseName}-${version}.jar"
+    manifest {
+        attributes 'Implementation-Title': 'image breeder project code',
+                'Implementation-Version': version,
+                'provider': 'gradle',
+                'Main-Class': mainClassName
+    }
+}
+
+// This allows publishing of this project library to Sonatype
+apply from: 'https://raw.github.com/barrybecker4/bb4-common/master/bb4-publish.gradle'
