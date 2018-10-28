@@ -1,13 +1,11 @@
 /** Copyright by Barry G. Becker, 2000-2018. Licensed under MIT License: http://www.opensource.org/licenses/MIT  */
 package com.barrybecker4.imagebreeder
 
-import com.barrybecker4.common.concurrency.CallableParallelizer
 import com.barrybecker4.java2d.imageproc.MetaImageOp
 import com.barrybecker4.optimization.parameter.types.Parameter
 import java.awt.image.BufferedImage
 import java.util.concurrent.Callable
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.JavaConverters._
 
 
 /**
@@ -19,7 +17,6 @@ import scala.collection.JavaConverters._
   */
 class ImageBreeder(var imageToBreed: BufferedImage, var metaOp: MetaImageOp, var variance: Float) {
   private var imgToParamsMap: Map[BufferedImage, Seq[Parameter]] = _
-  private val parallelizer = new CallableParallelizer[BufferedImage](Runtime.getRuntime.availableProcessors)
 
   /** @param numChildImages number of child images
     * @return list of bred images
@@ -27,17 +24,9 @@ class ImageBreeder(var imageToBreed: BufferedImage, var metaOp: MetaImageOp, var
   def breedImages(numChildImages: Int): Seq[BufferedImage] = {
     val images = ArrayBuffer[BufferedImage]()
     imgToParamsMap = Map[BufferedImage, Seq[Parameter]]()
-    val filterTasks = ArrayBuffer[Callable[BufferedImage]]()
-    var i = 0
-    while (i < numChildImages) {
-      filterTasks.append(new Worker(metaOp))
-      i += 1
-    }
+    val filterTasks = (0 until numChildImages).map(i => new Worker(metaOp))
 
-    parallelizer.invokeAllWithCallback(
-      filterTasks.toList.asJava,
-      (img: BufferedImage) => {images.append(img)}
-    )
+    filterTasks.par.foreach(callable => images.append(callable.call()))
     images
   }
 

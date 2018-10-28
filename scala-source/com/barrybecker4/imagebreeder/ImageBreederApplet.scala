@@ -26,6 +26,7 @@ import java.awt.event.ActionListener
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.awt.image.BufferedImage
+import ImageBreederApplet.{IMAGE_DIR, DEFAULT_IMAGE, DEFAULT_VARIANCE, NUM_CHILD_IMAGES}
 
 
 /**
@@ -53,8 +54,8 @@ class ImageBreederApplet()
   extends ApplicationApplet with ItemListener with ActionListener with ImageSelectionListener with SliderChangeListener {
 
   private var operations = new ProcessingOperators
-  createImageFrame(ImageBreederApplet.IMAGE_DIR + ImageBreederApplet.DEFAULT_IMAGE)
-  private var variance = ImageBreederApplet.DEFAULT_VARIANCE
+  createImageFrame(IMAGE_DIR + DEFAULT_IMAGE)
+  private var variance = DEFAULT_VARIANCE
   private var currentImage: BufferedImage = _
   private var imageListPanel: ImageListPanel = _
   private var loadButton:JButton = _
@@ -122,7 +123,7 @@ class ImageBreederApplet()
   private def createBottomControls = {
     loadButton = new JButton("Load...")
     loadButton.addActionListener(this)
-    val varianceSlider = new LabeledSlider("Variance", ImageBreederApplet.DEFAULT_VARIANCE, 0.0, 0.5)
+    val varianceSlider = new LabeledSlider("Variance", DEFAULT_VARIANCE, 0.0, 0.5)
     varianceSlider.addChangeListener(this)
     newGenerationButton = new JButton("New Generation")
     newGenerationButton.setToolTipText(
@@ -218,7 +219,7 @@ class ImageBreederApplet()
     enableUI(false)
     val time = System.currentTimeMillis
     val fb = new ImageBreeder(currentImage, metaOp, variance)
-    val images = fb.breedImages(ImageBreederApplet.NUM_CHILD_IMAGES)
+    val images = fb.breedImages(NUM_CHILD_IMAGES)
     assert(images != null)
     assert(images.nonEmpty)
     imgToParamsMap = fb.getImgToParamsMap
