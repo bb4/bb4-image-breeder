@@ -35,7 +35,7 @@ class ImageBreeder(var imageToBreed: BufferedImage, var metaOp: MetaImageOp, var
   /**  Runs one of the chunks. */
   private class Worker(val metaOp: MetaImageOp) extends Callable[BufferedImage] {
     // need to make a copy or other parallel thread may step on our internal data.
-    private var myMetaOp = metaOp.copy
+    private val myMetaOp = metaOp.copy
 
     override def call: BufferedImage = {
       val randOp = myMetaOp.getRandomInstance(variance)

@@ -26,25 +26,25 @@ import java.awt.event.ActionListener
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.awt.image.BufferedImage
-import ImageBreederApplet.{IMAGE_DIR, DEFAULT_IMAGE, DEFAULT_VARIANCE, NUM_CHILD_IMAGES}
+import ImageBreederConsts.{IMAGE_DIR, DEFAULT_IMAGE, DEFAULT_VARIANCE, NUM_CHILD_IMAGES}
 
+object ImageBreederConsts {
+  val NUM_CHILD_IMAGES = 20
+  val DEFAULT_VARIANCE = 0.2f
+  val IMAGE_DIR = "com/barrybecker4/imagebreeder/images/" // NON-NLS
+  val DEFAULT_IMAGE = "brian_in_surf1_big_hair_smaller.jpg"
+}
 
 /**
   * Allows you to mix filters together using a genetic algorithm
   * in order to produce very interesting results.
   */
 object ImageBreederApplet extends App {
-  private val NUM_CHILD_IMAGES = 20
-  private val DEFAULT_VARIANCE = 0.2f
-  private val IMAGE_DIR = "com/barrybecker4/imagebreeder/images/" // NON-NLS
-
-  private val DEFAULT_IMAGE = "brian_in_surf1_big_hair_smaller.jpg"
-
   var imageFile = IMAGE_DIR + DEFAULT_IMAGE
   val opts = new CommandLineOptions(args)
   if (opts.contains("imageFile")) {
     imageFile = opts.getValueForOption("imageFile")
-    System.out.println("imageFile = " + imageFile)
+    println("imageFile = " + imageFile)
   }
   val breeder = new ImageBreederApplet(imageFile)
   GUIUtil.showApplet(breeder)
@@ -86,7 +86,9 @@ class ImageBreederApplet()
     */
   private def createImageFrame(imageFile: String): Unit = {
     println("The imageFile == " + imageFile)
-    currentImage = GUIUtil.getBufferedImage(imageFile)
+
+    currentImage = GUIUtil.getBufferedImage(imageFile, this)
+
     println("currentImage=" + currentImage + "\n from " + imageFile)
     // also create image list panel
     imageListPanel = new ImageListPanel
@@ -220,8 +222,7 @@ class ImageBreederApplet()
     val time = System.currentTimeMillis
     val fb = new ImageBreeder(currentImage, metaOp, variance)
     val images = fb.breedImages(NUM_CHILD_IMAGES)
-    assert(images != null)
-    assert(images.nonEmpty)
+    assert(images != null && images.nonEmpty)
     imgToParamsMap = fb.getImgToParamsMap
     val elapsedTime = ((System.currentTimeMillis - time) / 1000).toInt
     statusLabel.setText("Performing " + key + "...done in " + elapsedTime + " seconds")
@@ -249,6 +250,7 @@ class ImageBreederApplet()
       fd.setVisible(true)
       if (fd.getFile == null) return
       val path = fd.getDirectory + fd.getFile
+      println("path = " + path)
       currentImage = Utilities.getBufferedImage(path)
       createImagesForSelectedFilter()
     }
