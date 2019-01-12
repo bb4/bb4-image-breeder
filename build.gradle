@@ -15,7 +15,6 @@ task runImageBreeder(type: JavaExec, dependsOn: classes) {
     jvmArgs = ["-ea", "-Xms512M", "-Xmx4G"]
 }
 
-
 dependencies {
     compile 'com.barrybecker4:bb4-ui:1.5-SNAPSHOT'
     compile 'com.barrybecker4:bb4-imageproc:1.5-SNAPSHOT'
@@ -32,5 +31,5 @@ jar {
     }
 }
 
-// This allows publishing of this project library to Sonatype
 apply from: 'https://raw.github.com/barrybecker4/bb4-common/master/bb4-publish.gradle'
+apply from: 'https://raw.githubusercontent.com/bb4/bb4-common/master/bb4-deploy.gradle'
