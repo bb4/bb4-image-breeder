@@ -1,35 +1,28 @@
-description = '<image breeder application>'
+plugins {
+    id "com.github.maiflai.scalatest" version "0.26" // needed to run scala tests
+}
+
+description = 'Image breeder application'
 group = 'com.barrybecker4'
-version = '1.5-SNAPSHOT'
-
-apply from: 'https://raw.github.com/barrybecker4/bb4-common/master/bb4.gradle'
-
-project.archivesBaseName = 'bb4-image-breeder'
-mainClassName = 'com.barrybecker4.imagebreeder.ImageBreederApplet'
-
+version = '1.6-SNAPSHOT'
+ext {
+    archivesBaseName = 'bb4-image-breeder'
+    mainClass = 'com.barrybecker4.imagebreeder.ImageBreederApp'
+}
+apply from: 'https://raw.githubusercontent.com/bb4/bb4-common/master/bb4.gradle'
 
 task runImageBreeder(type: JavaExec, dependsOn: classes) {
     group = 'application'
-    main = 'com.barrybecker4.imagebreeder.ImageBreederApplet'
+    main = 'com.barrybecker4.imagebreeder.ImageBreederApp'
     classpath = sourceSets.main.runtimeClasspath
     jvmArgs = ["-ea", "-Xms512M", "-Xmx4G"]
 }
 
 dependencies {
-    compile 'com.barrybecker4:bb4-ui:1.5-SNAPSHOT'
-    compile 'com.barrybecker4:bb4-imageproc:1.5-SNAPSHOT'
+    compile 'com.barrybecker4:bb4-ui:1.6-SNAPSHOT'
+    compile 'com.barrybecker4:bb4-imageproc:1.6-SNAPSHOT'
     compile fileTree(dir: 'lib', include: 'jhlabs-1.0.3.jar')
 }
 
-jar {
-    archiveName = "${archivesBaseName}-${version}.jar"
-    manifest {
-        attributes 'Implementation-Title': 'image breeder project code',
-                'Implementation-Version': version,
-                'provider': 'gradle',
-                'Main-Class': mainClassName
-    }
-}
-
-apply from: 'https://raw.github.com/barrybecker4/bb4-common/master/bb4-publish.gradle'
+apply from: 'https://raw.githubusercontent.com/bb4/bb4-common/master/bb4-publish.gradle'
 apply from: 'https://raw.githubusercontent.com/bb4/bb4-common/master/bb4-deploy.gradle'

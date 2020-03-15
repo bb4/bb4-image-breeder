@@ -6,13 +6,13 @@ import com.barrybecker4.optimization.parameter.types.Parameter
 import java.awt.image.BufferedImage
 import java.util.concurrent.Callable
 import scala.collection.mutable.ArrayBuffer
-
+import scala.collection.parallel.CollectionConverters._
 
 /**
   * Create a set of images from a single MetaImageOp.
   * Create permutations from the input image based on the metaOp passed in.
   * @param imageToBreed  some image to breed
-  * @param metaOp    metaOp to breed based on.
+  * @param metaOp metaOp to breed based on.
   * @param variance amount of variation to have in bred images.
   */
 class ImageBreeder(var imageToBreed: BufferedImage, var metaOp: MetaImageOp, var variance: Float) {
@@ -27,7 +27,7 @@ class ImageBreeder(var imageToBreed: BufferedImage, var metaOp: MetaImageOp, var
     val filterTasks = (0 until numChildImages).map(i => new Worker(metaOp))
 
     filterTasks.par.foreach(callable => images.append(callable.call()))
-    images
+    images.toSeq
   }
 
   def getImgToParamsMap: Map[BufferedImage, Seq[Parameter]] = imgToParamsMap

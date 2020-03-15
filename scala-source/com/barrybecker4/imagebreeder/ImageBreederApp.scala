@@ -39,18 +39,18 @@ object ImageBreederConsts {
   * Allows you to mix filters together using a genetic algorithm
   * in order to produce very interesting results.
   */
-object ImageBreederApplet extends App {
+object ImageBreederApp extends App {
   var imageFile = IMAGE_DIR + DEFAULT_IMAGE
   val opts = new CommandLineOptions(args)
   if (opts.contains("imageFile")) {
     imageFile = opts.getValueForOption("imageFile")
     println("imageFile = " + imageFile)
   }
-  val breeder = new ImageBreederApplet(imageFile)
+  val breeder = new ImageBreederApp(imageFile)
   GUIUtil.showApplet(breeder)
 }
 
-class ImageBreederApplet()
+class ImageBreederApp()
   extends ApplicationApplet with ItemListener with ActionListener with ImageSelectionListener with SliderChangeListener {
 
   private var operations = new ProcessingOperators
