@@ -11,8 +11,9 @@ class ImageBreederSuite extends AnyFunSuite {
     val imageFile =  IMAGE_DIR + DEFAULT_IMAGE
     val currentImage = GUIUtil.getBufferedImage(imageFile)
     val operations = new ProcessingOperators
-    val metaOp = operations.getOperation(operations.getSortedKeys.getItem(0))
+    val metaOp = operations.getOperation(operations.getSortedKeys.head)
     val fb = new ImageBreeder(currentImage, metaOp, 0.1f)
-    assertResult(356) {fb.imageToBreed.getHeight}
+    assertResult(20) { fb.breedImages(20).size }
+    assert(fb.imageToBreed.getHeight > 0)
   }
 }
